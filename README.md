@@ -193,16 +193,21 @@ Launch the web browser
 
 Send events using Android 'AudioManager', like media controls keys (play, pause, etc.).
 
+### Description
+
+The `window.plugins.intentShim.audioManager` functions can dispatch events like 'MediaKeys' to control for example Android music apps.
+Currently supports a single event: `mediaControl` with actions: `play`, `pause`, `next`, `previous`.
+
 ### Example
 
     var data = {event: "mediaControl", action: "pause"};
     window.plugins.intentShim.audioManager(data,
 	    function(res)
-		{
+        {
             console.log('OK? ' + res);
         },
-		function(info)
-		{
+        function(info)
+        {
             console.log('Failed: ' + info);
         });
 
