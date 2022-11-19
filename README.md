@@ -189,6 +189,23 @@ Launch the web browser
     function() {alert('Failed to open URL via Android Intent')}
     );
 
+## intentShim.audioManager
+
+Send events using Android 'AudioManager', like media controls keys (play, pause, etc.).
+
+### Example
+
+    var data = {event: "mediaControl", action: "pause"};
+    window.plugins.intentShim.audioManager(data,
+	    function(res)
+		{
+            console.log('OK? ' + res);
+        },
+		function(info)
+		{
+            console.log('Failed: ' + info);
+        });
+
 ## intentShim.getIntent
 
 Retrieves the intent that launched the activity
