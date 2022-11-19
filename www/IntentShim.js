@@ -49,6 +49,11 @@ IntentShim.prototype.startService = function (params, successCallback, errorCall
     exec(successCallback, errorCallback, "IntentShim", "startService", [params]);
 };
 
+IntentShim.prototype.audioManager = function (params, successCallback, errorCallback) {
+    argscheck.checkArgs('off', 'IntentShim.audioManager', arguments);
+    exec(successCallback, errorCallback, "IntentShim", "audioManager", [params]);
+};
+
 IntentShim.prototype.registerBroadcastReceiver = function (params, callback) {
     argscheck.checkArgs('of', 'IntentShim.registerBroadcastReceiver', arguments);
     exec(callback, null, "IntentShim", "registerBroadcastReceiver", [params]);

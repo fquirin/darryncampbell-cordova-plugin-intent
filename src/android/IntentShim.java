@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -103,6 +104,52 @@ public class IntentShim extends CordovaPlugin {
             sendBroadcast(intent);
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
             return true;
+        }
+        else if (action.equals("audioManager"))
+        {
+            if (args.length() != 1) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
+                return false;
+            }
+            JSONObject obj = args.getJSONObject(0);
+            AudioManager audioManager = (AudioManager) this.cordova.getActivity()
+                    .getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            String actionEvent = obj.has("event") ? obj.getString("event") : null;
+            if (actionEvent == null){
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
+                return false;
+            }else if (actionEvent.equals("mediaControl")){
+                String actionName = obj.has("action") ? obj.getString("action") : null;
+                if (actionName == null){
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
+                    return false;
+                }else{
+                    int keyCode = 0;
+                    switch (actionName){
+                        case "pause":
+                            keyCode = KeyEvent.KEYCODE_MEDIA_PAUSE;
+                            break;
+                        case "play":
+                            keyCode = KeyEvent.KEYCODE_MEDIA_PLAY;
+                            break;
+                        case "next":
+                            keyCode = KeyEvent.KEYCODE_MEDIA_NEXT;
+                            break;
+                        case "previous":
+                            keyCode = KeyEvent.KEYCODE_MEDIA_PREVIOUS;
+                            break;
+                    }
+                    if (keyCode > 0){
+                        audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
+                        audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
+                        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+                        return true;
+                    }else{
+                        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
+                        return false;
+                    }
+                }
+            }
         }
         else if (action.equals("startService"))
         {
